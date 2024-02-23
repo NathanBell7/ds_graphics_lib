@@ -51,7 +51,7 @@ public:
   int createNewSprite(bool mainScreen, SpriteSize spriteSize, int x, int y,
                       int priority);
 
-  void clearSprites(bool mainScreen, bool subScreen);
+  void initializeDisplays(bool mainScreen, bool subScreen);
 
   void updateDisplays(bool main, bool sub);
 

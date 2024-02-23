@@ -87,7 +87,7 @@ int SpriteController::createNewSprite(bool mainScreen, SpriteSize spriteSize,
   }
 }
 
-void SpriteController::clearSprites(bool mainScreen, bool subScreen) {
+void SpriteController::initializeDisplays(bool mainScreen, bool subScreen) {
   if (mainScreen == true) {
     for (int i = 0; i < MAX_SPRITES_PER_SCREEN; i++) {
       spritesMain[i] = 0;
