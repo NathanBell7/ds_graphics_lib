@@ -1,3 +1,5 @@
+#include "sprites.hpp"
+
 const int SPRITE_PALETTE_LENGTH = 16;
 const int MAX_SPRITES_PER_SCREEN = 128;
 const int MAX_PALETTES_PER_SCREEN = 16;

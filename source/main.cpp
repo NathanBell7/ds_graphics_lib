@@ -9,7 +9,8 @@ int main(){
 	videoSetMode(MODE_5_2D);//set video mode main
 	videoSetModeSub(MODE_5_2D);
   lcdMainOnTop(); //set main screen to top
-  SpriteController SpriteController = new SpriteController();
+  SpriteController* spriteController = new SpriteController();
+
   while (1){
 
   }
