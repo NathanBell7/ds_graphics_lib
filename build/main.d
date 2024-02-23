@@ -60,7 +60,8 @@ main.o: \
  /opt/devkitpro/libnds/include/nds/arm9/video.h \
  /opt/devkitpro/libnds/include/nds/arm9/videoGL.h \
  /opt/devkitpro/libnds/include/nds/arm9/nand.h \
- /home/Nathan/Documents/Personal/C++/ds_graphics_lib/source/sprites.hpp
+ /home/Nathan/Documents/Personal/C++/ds_graphics_lib/include/sprites.hpp \
+ /home/Nathan/Documents/Personal/C++/ds_graphics_lib/build/blue_head_down.h
 /opt/devkitpro/libnds/include/nds.h:
 /opt/devkitpro/libnds/include/nds/libversion.h:
 /opt/devkitpro/libnds/include/nds/ndstypes.h:
@@ -121,4 +122,5 @@ main.o: \
 /opt/devkitpro/libnds/include/nds/arm9/video.h:
 /opt/devkitpro/libnds/include/nds/arm9/videoGL.h:
 /opt/devkitpro/libnds/include/nds/arm9/nand.h:
-/home/Nathan/Documents/Personal/C++/ds_graphics_lib/source/sprites.hpp:
+/home/Nathan/Documents/Personal/C++/ds_graphics_lib/include/sprites.hpp:
+/home/Nathan/Documents/Personal/C++/ds_graphics_lib/build/blue_head_down.h:

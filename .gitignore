@@ -1,0 +1,5 @@
+build/
+ds_graphics_lib.elf
+ds_graphics_lib.nds
+template.prj
+template.pnproj

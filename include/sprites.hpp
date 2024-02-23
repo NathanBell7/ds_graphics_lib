@@ -1,10 +1,6 @@
 #ifndef SPRITES_H
 #define SPRITES_H
 
-int SPRITE_PALETTE_LENGTH; // length of each sprite palette (16)
-int MAX_SPRITES_PER_SCREEN;
-int MAX_PALETTES_PER_SCREEN;
-
 class Sprite { // a class for dealing with tiled sprites and palettes
 
 private:
@@ -31,7 +27,7 @@ public:
 
   void setPaletteNumber(int paletteNumber); // between 1 and 16
 
-  void setSpriteTiles(const unsigned int tiles[], unsigned int tilesLen);
+  void setTiles(const unsigned int tiles[], unsigned int tilesLen);
 };
 
 class SpriteController {
@@ -39,24 +35,33 @@ class SpriteController {
 private:
   int currentIdMainScreen;
   int currentIdSubScreen;
-  Sprite spritesMain[128];
-  Sprite spritesSub[128];
+  Sprite *spritesMain[MAX_SPRITES_PER_SCREEN];
+  Sprite *spritesSub[MAX_SPRITES_PER_SCREEN];
+  bool initialisedPalettesMain[MAX_PALETTES_PER_SCREEN];
+  bool initialisedPalettesSub[MAX_PALETTES_PER_SCREEN];
 
 public:
   SpriteController();
 
-  int create_new_sprite(OamState *screenOam, SpriteSize spriteSize,int x, int y, int priority);
+  int createNewSprite(bool mainScreen, SpriteSize spriteSize, int x, int y,
+                      int priority);
 
-  void clearSpritesMain();
-
-  void clearSpritesSub();
-
-  void clearSprites();
+  void clearSprites(bool mainScreen, bool subScreen);
 
   void updateDisplays(bool main, bool sub);
 
-  void addSpritePalette(const unsigned short palette[],
-                        unsigned short paletteLen);
+  void addPalette(const unsigned short palette[], unsigned short paletteLen);
+
+  void setSpriteX(int spriteId, bool mainScreen, int x);
+
+  void setSpriteY(int spriteId, bool mainScreen, int y);
+
+  void setSpritePriority(int spriteId, bool mainScreen, int priority);
+
+  void setSpritePaletteNumber(int spriteId, bool mainScreen, int paletteNumber);
+
+  void setSpriteTiles(int spriteId, bool mainScreen, const unsigned int tiles[],
+                      unsigned int tilesLen);
 };
 
 #endif
