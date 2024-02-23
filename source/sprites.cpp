@@ -74,7 +74,7 @@ int SpriteController::createNewSprite(bool mainScreen, SpriteSize spriteSize,
                                   y, priority);
       spritesMain[this->currentIdMainScreen] = sprite;
       this->currentIdMainScreen++;
-      return this->currentIdMainScreen - 1;
+      return this->currentIdMainScreen;
     }
   } else {
     if (currentIdSubScreen < MAX_SPRITES_PER_SCREEN - 1) {
@@ -82,7 +82,7 @@ int SpriteController::createNewSprite(bool mainScreen, SpriteSize spriteSize,
           new Sprite(&oamSub, spriteSize, currentIdSubScreen, x, y, priority);
       spritesSub[this->currentIdSubScreen] = sprite;
       this->currentIdSubScreen++;
-      return this->currentIdSubScreen - 1;
+      return this->currentIdSubScreen;
     }
   }
 }

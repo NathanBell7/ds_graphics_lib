@@ -25,7 +25,6 @@ int main() {
   spriteController->setSpriteTiles(0, true, blue_head_downTiles,
                                    blue_head_downTilesLen);
   while (1) {
-
     spriteController->updateDisplays(true, false);
   }
 
