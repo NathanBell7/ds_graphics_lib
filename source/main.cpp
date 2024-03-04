@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "blue_head_down.h"
+#include "blue_head_down_2.h"
 
 int main() {
 
@@ -24,8 +25,21 @@ int main() {
   spriteController->setSpritePaletteNumber(0, true, 0);
   spriteController->setSpriteTiles(0, true, blue_head_downTiles,
                                    blue_head_downTilesLen);
+
+
+  int sprite2 =
+      spriteController->createNewSprite(true, SpriteSize_16x16, 100, 100, 1);
+
+  spriteController->addPalette(1, true, blue_head_down_2Pal,
+                               blue_head_down_2PalLen);
+  spriteController->setSpritePaletteNumber(1, true, 1);
+  spriteController->setSpriteTiles(1, true, blue_head_down_2Tiles,
+                                   blue_head_down_2TilesLen);
+
+
   while (1) {
 		scanKeys();
+
 		if(keysDown() & KEY_LEFT){
       spriteController->setSpriteX(0, true, spriteController->getSpriteX(0, true) - 5);
 		}
@@ -41,6 +55,7 @@ int main() {
 		if(keysDown() & KEY_DOWN){
       spriteController->setSpriteY(0, true, spriteController->getSpriteY(0, true) + 5);
 		}
+
     spriteController->updateDisplays(true, false);
   }
 

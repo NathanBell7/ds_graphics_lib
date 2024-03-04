@@ -1,0 +1,53 @@
+- On the DS, images are can be tiled and paletted (same as previous nintendo consoles).
+
+- This means that instead of having bitmap images (which it can also use, unlike previous consoles), it has tiles and palettes:
+    - A tile is an 8x8 pixel section of an image. On the DS, we call these images sprites.
+    - A palette is the colours that a pixel can be in the image, it is a shorthand for representing a 16 bit colour.
+
+- As bitmap images on the ds have 16 bit colour depth, they can take up a lot of memory, so tiling makes them smaller.
+
+- A palette can either be 4 bit or 8 bit "colour depth" (4 bit recommended so more palettes can be used as take up less space)
+
+- Basically, instead of each pixel being 16 bit colour depth (like in a bitmap), each pixel in a tile is 4 bit colour depth that indexes to a 16 bit colour depth palette entry
+
+- Example - An 8x8 image with 16 bit colour depth:
+
+    Tiled:
+
+        Palette:
+            - 8 colours
+            - Each colour is 16 bits (2 bytes)
+            - 8 colours * 2 bytes per colour = 16 bytes for palette
+            - Visual representation (each set of 0's is one 16 bit colour, and 8 entries as 8 colours)
+                [0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+                 0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000]
+
+        Tiles:
+            - 8 pixels * 8 pixels = 64 pixels
+            - each pixel needs 4 bits(or half a byte)
+            - 64 pixels * 0.5 bytes = 32 bytes for tiles (in this case one tile as the smalles tiled image is 8x8)
+
+        - Total space for image is 48 bytes.
+
+
+    Bitmap:
+        - 8 pixels * 8 pixels = 64 pixels
+        - 64 pixels * 2 bytes per pixel = 128 bytes for image
+
+
+    Tiled image saves 80 bytes of space! Also as a bonus, you can share palettes between images!
+
+
+
+- Palettes can either be 16 colour or 256 colour, so if your palette uses less colours than 16 that's ok! Just think of palettes below 16 colours as taking up 16 colours and anything above that taking up 256 colours, as that is how it functions when applied.
+
+The actual code can only index up to 16 different palettes (0 - 15).
+
+- Palette memory is 1024 bytes in size
+[16 Bytes]
+
+
+
+
+
+

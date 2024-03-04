@@ -126,13 +126,13 @@ void SpriteController::addPalette(int paletteNumber, bool mainScreen,
                                   const unsigned short palette[],
                                   unsigned short paletteLen) {
   if (mainScreen == true) {
-    dmaCopy(palette, &SPRITE_PALETTE[paletteNumber * SPRITE_PALETTE_LENGTH],
+    dmaCopy(palette, &SPRITE_PALETTE[paletteNumber * COLOURS_PER_PALETTE],
             paletteLen);
     initialisedPalettesMain[paletteNumber] = true;
   } else {
-    dmaCopy(palette, &SPRITE_PALETTE_SUB[paletteNumber * SPRITE_PALETTE_LENGTH],
+    dmaCopy(palette, &SPRITE_PALETTE_SUB[paletteNumber * COLOURS_PER_PALETTE],
             paletteLen);
-    initialisedPalettesMain[paletteNumber] = true;
+    initialisedPalettesSub[paletteNumber] = true;
   }
 }
 
