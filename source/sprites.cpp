@@ -46,6 +46,14 @@ void Sprite::setY(int y) {
   this->updateData();
 }
 
+int Sprite::getX() {
+  return this->x;
+}
+
+int Sprite::getY() {
+  return this->y;
+}
+
 void Sprite::setPriority(int priority) {
   this->priority = priority;
   this->updateData();
@@ -125,6 +133,22 @@ void SpriteController::addPalette(int paletteNumber, bool mainScreen,
     dmaCopy(palette, &SPRITE_PALETTE_SUB[paletteNumber * SPRITE_PALETTE_LENGTH],
             paletteLen);
     initialisedPalettesMain[paletteNumber] = true;
+  }
+}
+
+int SpriteController::getSpriteX(int spriteId, bool mainScreen) {
+  if (mainScreen == true){
+    return spritesMain[spriteId]->getX();
+  } else{
+    return spritesSub[spriteId]->getX();
+  }
+}
+
+int SpriteController::getSpriteY(int spriteId, bool mainScreen) {
+  if (mainScreen == true){
+    return spritesMain[spriteId]->getY();
+  } else{
+    return spritesSub[spriteId]->getY();
   }
 }
 

@@ -25,6 +25,22 @@ int main() {
   spriteController->setSpriteTiles(0, true, blue_head_downTiles,
                                    blue_head_downTilesLen);
   while (1) {
+		scanKeys();
+		if(keysDown() & KEY_LEFT){
+      spriteController->setSpriteX(0, true, spriteController->getSpriteX(0, true) - 5);
+		}
+
+		if(keysDown() & KEY_RIGHT){
+      spriteController->setSpriteX(0, true, spriteController->getSpriteX(0, true) + 5);
+		}
+
+		if(keysDown() & KEY_UP){
+      spriteController->setSpriteY(0, true, spriteController->getSpriteY(0, true) - 5);
+		}
+
+		if(keysDown() & KEY_DOWN){
+      spriteController->setSpriteY(0, true, spriteController->getSpriteY(0, true) + 5);
+		}
     spriteController->updateDisplays(true, false);
   }
 

@@ -28,6 +28,10 @@ public:
 
   void setY(int y); // max y is 191
 
+  int getX();
+
+  int getY();
+
   void setPriority(int priority); // between 0 and 3
 
   void setPaletteNumber(int paletteNumber); // between 1 and 16
@@ -61,6 +65,10 @@ public:
   void setSpriteX(int spriteId, bool mainScreen, int x);
 
   void setSpriteY(int spriteId, bool mainScreen, int y);
+
+  int getSpriteX(int spriteId, bool mainScreen);
+
+  int getSpriteY(int spriteId, bool mainScreen);
 
   void setSpritePriority(int spriteId, bool mainScreen, int priority);
 
