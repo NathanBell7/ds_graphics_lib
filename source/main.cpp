@@ -3,60 +3,60 @@
 #include <stdio.h>
 
 #include "blue_head_down.h"
-#include "blue_head_down_2.h"
 
 int main() {
 
+  lcdMainOnTop();          // set main screen to top
+                           //
   videoSetMode(MODE_5_2D); // set video mode main
   videoSetModeSub(MODE_5_2D);
-
-  lcdMainOnTop(); // set main screen to top
-                  
+  consoleDemoInit();
 
   SpriteController *spriteController = new SpriteController();
 
   spriteController->initializeDisplays(true, false);
 
-  int sprite1 =
-      spriteController->createNewSprite(true, SpriteSize_16x16, 50, 50, 1);
+  int spriteX = 50;
+  int spriteY = 50;
+  int priority = 0;
+  int paletteNumber = 0;
+  bool isMainScreen = true;
 
-  spriteController->addPalette(0, true, blue_head_downPal,
+  int spriteId = spriteController->createNewSprite(isMainScreen, SpriteSize_16x16,
+                                                   spriteX, spriteY, priority);
+
+  spriteController->addPalette(paletteNumber, isMainScreen, blue_head_downPal,
                                blue_head_downPalLen);
-  spriteController->setSpritePaletteNumber(0, true, 0);
-  spriteController->setSpriteTiles(0, true, blue_head_downTiles,
+
+  spriteController->setSpritePaletteNumber(spriteId, isMainScreen, paletteNumber);
+
+  spriteController->setSpriteTiles(spriteId, isMainScreen, blue_head_downTiles,
                                    blue_head_downTilesLen);
 
-
-  int sprite2 =
-      spriteController->createNewSprite(true, SpriteSize_16x16, 100, 100, 1);
-
-  spriteController->addPalette(1, true, blue_head_down_2Pal,
-                               blue_head_down_2PalLen);
-  spriteController->setSpritePaletteNumber(1, true, 1);
-  spriteController->setSpriteTiles(1, true, blue_head_down_2Tiles,
-                                   blue_head_down_2TilesLen);
-
-
   while (1) {
-		scanKeys();
+    scanKeys();
 
-		if(keysDown() & KEY_LEFT){
-      spriteController->setSpriteX(0, true, spriteController->getSpriteX(0, true) - 5);
-		}
+    if (keysHeld() & KEY_LEFT) {
+      spriteX -= 5;
+      spriteController->setSpriteX(spriteId, isMainScreen, spriteX);
+    }
 
-		if(keysDown() & KEY_RIGHT){
-      spriteController->setSpriteX(0, true, spriteController->getSpriteX(0, true) + 5);
-		}
+    if (keysHeld() & KEY_RIGHT) {
+      spriteX += 5;
+      spriteController->setSpriteX(spriteId, isMainScreen, spriteX);
+    }
 
-		if(keysDown() & KEY_UP){
-      spriteController->setSpriteY(0, true, spriteController->getSpriteY(0, true) - 5);
-		}
+    if (keysHeld() & KEY_UP) {
+      spriteY -= 5;
+      spriteController->setSpriteY(spriteId, isMainScreen, spriteY);
+    }
 
-		if(keysDown() & KEY_DOWN){
-      spriteController->setSpriteY(0, true, spriteController->getSpriteY(0, true) + 5);
-		}
+    if (keysHeld() & KEY_DOWN) {
+      spriteY += 5;
+      spriteController->setSpriteY(spriteId, isMainScreen, spriteY);
+    }
 
-    spriteController->updateDisplays(true, false);
+    spriteController->updateDisplays(true, true);
   }
 
   return 0;

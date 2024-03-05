@@ -15,12 +15,9 @@
     Tiled:
 
         Palette:
-            - 8 colours
+            - 16 colours
             - Each colour is 16 bits (2 bytes)
-            - 8 colours * 2 bytes per colour = 16 bytes for palette
-            - Visual representation (each set of 0's is one 16 bit colour, and 8 entries as 8 colours)
-                [0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
-                 0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000]
+            - 16 colours * 2 bytes per colour = 32 bytes for palette
 
         Tiles:
             - 8 pixels * 8 pixels = 64 pixels
@@ -39,12 +36,99 @@
 
 
 
-- Palettes can either be 16 colour or 256 colour, so if your palette uses less colours than 16 that's ok! Just think of palettes below 16 colours as taking up 16 colours and anything above that taking up 256 colours, as that is how it functions when applied.
+- Palettes can either be 16 colour or 256 colour, so if your palette uses less colours than 16 that's ok! Just think of palettes below 16 colours as taking up 16 colours and anything above that taking up 256 colours, as that is how it functions when applied (The actual code can only index up to 16 different palettes (0 - 15)).
 
-The actual code can only index up to 16 different palettes (0 - 15).
 
-- Palette memory is 1024 bytes in size
-[16 Bytes]
+- To keep it simple, we will only be using the 16 colour palettes, so keep your image's max colours to 16 :)
+
+
+- Visual representation of palette memory assuming only 16 colour palettes:
+
+        - Visual representation of one colour palette (each set of 0's is one 16 bit depth colour, and there are 16 entries as there are 16 colours)
+                [0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+                0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+                0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+                0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000]
+
+        - This can be simplified to [32 Bytes]
+
+        - You can picture the overall memory looking like this [32 Bytes, 32 Bytes, 32 Bytes, 32 Bytes, 32 Bytes.....](length of 16)
+
+        - The actual memory is much larger than this (1024 Bytes), but when using 16 colour palettes you do not hit this threshold (actually at 512 Bytes)
+
+        - This is also per screen
+
+
+- In practice:
+    - You access the palette memory through the SPRITE_PALETTE and SPRITE_PALETTE_SUB variables
+    - You use the dmaCopy() method to copy palette data directly to the SPRITE_PALETTE memory location(dmaCopy requires a memory location)
+    - To do this you must use the & operator to access the memory location of the SPRITE_PALETTE e.g. &SPRITE_PALETTE
+    - Each entry in one palette is 16 bits, which is best represented by an unsigned short.
+    - Now, since the SPRITE_PALETTE is an array of unsigned shorts, you can directly copy one palette to the position 0 offset of the array.
+    - If you want to copy in another palette, you must increment the index by one palette's worth of data (This is equal to 16 unsigned shorts).
+
+    Visual representation:
+
+        SPRITE_PALETTE ({} symbols just mark out 1 16 colour palette worth of data)=
+            [{0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+            0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+            0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+            0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000},
+            {0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+            0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+            0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+            0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000},
+            {0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+            0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+            0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+            0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000}........]
+
+
+        ourPalette:
+
+            unsigned short blue_head_down_2Pal[16] =
+                [1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111,
+                1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111,
+                1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111,
+                1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111]
+
+
+        currentOffset = 0
+
+        dmaCopy(&SPRITE_PALETTE[currentOffset], ourPalette)
+
+        SPRITE_PALETTE =
+            [{1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111,
+                1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111,
+                1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111,
+                1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111},
+                {0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+                0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+                0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+                0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000},
+                {0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+                0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+                0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+                0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000}........]
+
+        currentOffset += 16 (this is because we increment by 16 of the data type (unsigned short), as that is the same as incrementing 32 bytes)
+
+        dmaCopy(&SPRITE_PALETTE[currentOffset], ourPalette)
+
+        SPRITE_PALETTE =
+            [{1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111,
+                1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111,
+                1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111,
+                1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111},
+                {1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111,
+                1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111,
+                1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111,
+                1111111111111111, 1111111111111111, 1111111111111111, 1111111111111111},
+                {0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+                0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+                0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000,
+                0000000000000000, 0000000000000000, 0000000000000000, 0000000000000000}........]
+
 
 
 

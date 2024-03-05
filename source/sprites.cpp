@@ -1,6 +1,7 @@
 #include "sprites.hpp"
 #include <nds.h>
-
+#include <stdio.h>
+// TODO: Make this class private inside of SpriteController
 Sprite ::Sprite(OamState *screenOam, SpriteSize spriteSize, int id, int x,
                 int y, int priority) {
   this->screenOam = screenOam;
@@ -46,14 +47,6 @@ void Sprite::setY(int y) {
   this->updateData();
 }
 
-int Sprite::getX() {
-  return this->x;
-}
-
-int Sprite::getY() {
-  return this->y;
-}
-
 void Sprite::setPriority(int priority) {
   this->priority = priority;
   this->updateData();
@@ -74,27 +67,6 @@ SpriteController::SpriteController() {
   this->currentIdSubScreen = 0;
 }
 
-int SpriteController::createNewSprite(bool mainScreen, SpriteSize spriteSize,
-                                      int x, int y, int priority) {
-  if (mainScreen == true) {
-    if (currentIdMainScreen < MAX_SPRITES_PER_SCREEN - 1) {
-      Sprite *sprite = new Sprite(&oamMain, spriteSize, currentIdMainScreen, x,
-                                  y, priority);
-      spritesMain[this->currentIdMainScreen] = sprite;
-      this->currentIdMainScreen++;
-      return this->currentIdMainScreen;
-    }
-  } else {
-    if (currentIdSubScreen < MAX_SPRITES_PER_SCREEN - 1) {
-      Sprite *sprite =
-          new Sprite(&oamSub, spriteSize, currentIdSubScreen, x, y, priority);
-      spritesSub[this->currentIdSubScreen] = sprite;
-      this->currentIdSubScreen++;
-      return this->currentIdSubScreen;
-    }
-  }
-}
-
 void SpriteController::initializeDisplays(bool mainScreen, bool subScreen) {
   if (mainScreen == true) {
     for (int i = 0; i < MAX_SPRITES_PER_SCREEN; i++) {
@@ -112,9 +84,37 @@ void SpriteController::initializeDisplays(bool mainScreen, bool subScreen) {
   }
 }
 
-void SpriteController::updateDisplays(bool mainScreen, bool subScreen) {
+int SpriteController::createNewSprite(bool isMainScreen, SpriteSize spriteSize,
+                                      int x, int y, int priority) {
+  if (!this->validatePriority(priority)) {
+    return -1;
+  }
+  if (isMainScreen == true) {
+    if (currentIdMainScreen < MAX_SPRITES_PER_SCREEN - 1) {
+      Sprite *sprite =
+          new Sprite(&oamMain, spriteSize, currentIdMainScreen, x, y, priority);
+      spritesMain[this->currentIdMainScreen] = sprite;
+      this->currentIdMainScreen++;
+      return this->currentIdMainScreen - 1;
+    } else {
+      return -1;
+    }
+  } else {
+    if (currentIdSubScreen < MAX_SPRITES_PER_SCREEN - 1) {
+      Sprite *sprite =
+          new Sprite(&oamSub, spriteSize, currentIdSubScreen, x, y, priority);
+      spritesSub[this->currentIdSubScreen] = sprite;
+      this->currentIdSubScreen++;
+      return this->currentIdSubScreen - 1;
+    } else {
+      return -1;
+    }
+  }
+}
+
+void SpriteController::updateDisplays(bool isMainScreen, bool subScreen) {
   swiWaitForVBlank();
-  if (mainScreen == true) {
+  if (isMainScreen == true) {
     oamUpdate(&oamMain);
   }
   if (subScreen == true) {
@@ -122,10 +122,13 @@ void SpriteController::updateDisplays(bool mainScreen, bool subScreen) {
   }
 }
 
-void SpriteController::addPalette(int paletteNumber, bool mainScreen,
-                                  const unsigned short palette[],
-                                  unsigned short paletteLen) {
-  if (mainScreen == true) {
+int SpriteController::addPalette(int paletteNumber, bool isMainScreen,
+                                 const unsigned short palette[],
+                                 unsigned short paletteLen) {
+  if (!this->validatePaletteNumber(paletteNumber)) {
+    return -1;
+  }
+  if (isMainScreen == true) {
     dmaCopy(palette, &SPRITE_PALETTE[paletteNumber * COLOURS_PER_PALETTE],
             paletteLen);
     initialisedPalettesMain[paletteNumber] = true;
@@ -134,70 +137,105 @@ void SpriteController::addPalette(int paletteNumber, bool mainScreen,
             paletteLen);
     initialisedPalettesSub[paletteNumber] = true;
   }
+  return 1;
 }
 
-int SpriteController::getSpriteX(int spriteId, bool mainScreen) {
-  if (mainScreen == true){
-    return spritesMain[spriteId]->getX();
-  } else{
-    return spritesSub[spriteId]->getX();
+int SpriteController::setSpriteX(int spriteId, bool isMainScreen, int x) {
+  if (!this->validateSpriteId(spriteId, isMainScreen)) {
+    return -1;
   }
-}
-
-int SpriteController::getSpriteY(int spriteId, bool mainScreen) {
-  if (mainScreen == true){
-    return spritesMain[spriteId]->getY();
-  } else{
-    return spritesSub[spriteId]->getY();
-  }
-}
-
-void SpriteController::setSpriteX(int spriteId, bool mainScreen, int x) {
-  if (mainScreen == true) {
+  if (isMainScreen == true) {
     spritesMain[spriteId]->setX(x);
   } else {
     spritesSub[spriteId]->setX(x);
   }
+  return 1;
 }
 
-void SpriteController::setSpriteY(int spriteId, bool mainScreen, int y) {
-  if (mainScreen == true) {
+int SpriteController::setSpriteY(int spriteId, bool isMainScreen, int y) {
+  if (!this->validateSpriteId(spriteId, isMainScreen)) {
+    return -1;
+  }
+  if (isMainScreen == true) {
     spritesMain[spriteId]->setY(y);
   } else {
     spritesSub[spriteId]->setY(y);
   }
+  return 1;
 }
 
-void SpriteController::setSpritePriority(int spriteId, bool mainScreen,
-                                         int priority) {
-  if (mainScreen == true) {
+int SpriteController::setSpritePriority(int spriteId, bool isMainScreen,
+                                        int priority) {
+  if (!this->validatePriority(priority) ||
+      !this->validateSpriteId(spriteId, isMainScreen)) {
+    return -1;
+  }
+  if (isMainScreen == true) {
     spritesMain[spriteId]->setPriority(priority);
   } else {
     spritesSub[spriteId]->setPriority(priority);
   }
+  return 1;
 }
 
-void SpriteController::setSpritePaletteNumber(int spriteId, bool mainScreen,
-                                              int paletteNumber) {
-  if (mainScreen == true) {
-    if (initialisedPalettesMain[paletteNumber] == false) {
-      // trying to set uninitialized palette
-    }
+int SpriteController::setSpritePaletteNumber(int spriteId, bool isMainScreen,
+                                             int paletteNumber) {
+
+  if (!this->validateSpriteId(spriteId, isMainScreen) ||
+      !this->validateSpritePaletteNumber(paletteNumber, isMainScreen)) {
+    return -1;
+  }
+  if (isMainScreen == true) {
     spritesMain[spriteId]->setPaletteNumber(paletteNumber);
   } else {
-    if (initialisedPalettesSub[paletteNumber] == false) {
-      // trying to set uninitialized palette
-    }
     spritesSub[spriteId]->setPaletteNumber(paletteNumber);
   }
+  return 1;
 }
 
-void SpriteController::setSpriteTiles(int spriteId, bool mainScreen,
-                                      const unsigned int tiles[],
-                                      unsigned int tilesLen) {
-  if (mainScreen == true) {
+int SpriteController::setSpriteTiles(int spriteId, bool isMainScreen,
+                                     const unsigned int tiles[],
+                                     unsigned int tilesLen) {
+  if (!this->validateSpriteId(spriteId, isMainScreen)) {
+    return -1;
+  }
+  if (isMainScreen == true) {
     spritesMain[spriteId]->setTiles(tiles, tilesLen);
   } else {
     spritesSub[spriteId]->setTiles(tiles, tilesLen);
   }
+  return 1;
+}
+
+bool SpriteController::validateSpriteId(int spriteId, bool isMainScreen) {
+  if (((isMainScreen && spriteId <= currentIdMainScreen) ||
+       (!isMainScreen && spriteId <= currentIdSubScreen)) &&
+      spriteId >= 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool SpriteController::validateSpritePaletteNumber(int paletteNumber,
+                                                   bool isMainScreen) {
+  if (validatePaletteNumber(paletteNumber) &&
+      ((isMainScreen && this->initialisedPalettesMain[paletteNumber]) ||
+       (!isMainScreen && this->initialisedPalettesSub[paletteNumber]))) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool SpriteController::validatePaletteNumber(int paletteNumber) {
+  if (paletteNumber >= 0 && paletteNumber <= 15) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+bool SpriteController::validatePriority(int priority) {
+  return (priority >= 0 && priority <= 3);
 }

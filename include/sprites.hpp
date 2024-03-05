@@ -28,10 +28,6 @@ public:
 
   void setY(int y); // max y is 191
 
-  int getX();
-
-  int getY();
-
   void setPriority(int priority); // between 0 and 3
 
   void setPaletteNumber(int paletteNumber); // between 1 and 16
@@ -52,30 +48,34 @@ private:
 public:
   SpriteController();
 
-  int createNewSprite(bool mainScreen, SpriteSize spriteSize, int x, int y,
-                      int priority);
-
   void initializeDisplays(bool mainScreen, bool subScreen);
 
-  void updateDisplays(bool main, bool sub);
+  int createNewSprite(bool isMainScreen, SpriteSize spriteSize, int x, int y,
+                      int priority);
 
-  void addPalette(int paletteNumber, bool mainScreen,
-                  const unsigned short palette[], unsigned short paletteLen);
+  void updateDisplays(bool isMainScreen, bool subScreen);
 
-  void setSpriteX(int spriteId, bool mainScreen, int x);
+  int addPalette(int paletteNumber, bool isMainScreen,
+                 const unsigned short palette[], unsigned short paletteLen);
 
-  void setSpriteY(int spriteId, bool mainScreen, int y);
+  int setSpriteX(int spriteId, bool isMainScreen, int x);
 
-  int getSpriteX(int spriteId, bool mainScreen);
+  int setSpriteY(int spriteId, bool isMainScreen, int y);
 
-  int getSpriteY(int spriteId, bool mainScreen);
+  int setSpritePriority(int spriteId, bool isMainScreen, int priority);
 
-  void setSpritePriority(int spriteId, bool mainScreen, int priority);
+  int setSpritePaletteNumber(int spriteId, bool isMainScreen, int paletteNumber);
 
-  void setSpritePaletteNumber(int spriteId, bool mainScreen, int paletteNumber);
+  int setSpriteTiles(int spriteId, bool isMainScreen, const unsigned int tiles[],
+                     unsigned int tilesLen);
 
-  void setSpriteTiles(int spriteId, bool mainScreen, const unsigned int tiles[],
-                      unsigned int tilesLen);
+  bool validateSpriteId(int spriteId, bool mainScreen);
+
+  bool validateSpritePaletteNumber(int paletteNumber, bool mainScreen);
+
+  bool validatePaletteNumber(int paletteNumber);
+
+  bool validatePriority(int priority);
 };
 
 #endif
