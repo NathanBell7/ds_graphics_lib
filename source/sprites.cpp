@@ -2,67 +2,6 @@
 #include <nds.h>
 #include <stdio.h>
 
-void SpriteController::Sprite::setX(int x) {
-  this->x = x;
-  this->updateData();
-}
-
-void SpriteController::Sprite::setY(int y) {
-  this->y = y;
-  this->updateData();
-}
-
-void SpriteController::Sprite::setTiles(const unsigned int tiles[],
-                                        unsigned int tilesLen) {
-  dmaCopy(tiles, this->spriteGfxPointer, tilesLen);
-  this->updateData();
-}
-
-void SpriteController::Sprite::setPriority(int priority) {
-  this->priority = priority;
-  this->updateData();
-}
-
-void SpriteController::Sprite::setPaletteNumber(int paletteNumber) {
-  this->paletteNumber = paletteNumber;
-  this->updateData();
-}
-
-SpriteController::Sprite::Sprite(OamState *screenOam, SpriteSize spriteSize,
-                                 int id, int x, int y, int priority) {
-  this->screenOam = screenOam;
-  this->spriteSize = spriteSize;
-  this->id = id;
-  this->spriteGfxPointer = oamAllocateGfx(this->screenOam, this->spriteSize,
-                                          SpriteColorFormat_16Color);
-  this->x = x;
-  this->y = y;
-  this->priority = priority;
-  this->paletteNumber = paletteNumber;
-  this->updateData();
-}
-
-void SpriteController::Sprite::updateData() {
-  oamSet(this->screenOam,
-         this->id,                  // Sprite id
-         this->x,                   // X position
-         this->y,                   // Y position
-         this->priority,            // Priority (lower is better priority)
-         this->paletteNumber,       // Which palette to use
-         this->spriteSize,          // Sprite size can be 8x8; 16x16; 32x32;
-                                    // 16x8 etc;
-         SpriteColorFormat_16Color, // Colour format can be
-                                    // SpriteColorFormat_16Color;
-                                    // SpriteColorFormat_256Color;
-         this->spriteGfxPointer,
-         0,      // affine index (if < 0 or > 31 the sprite will be unrotated)
-         false,  // double sprite size if affine index > 0
-         false,  // hidden
-         false,  // flip vertical
-         false,  // flip horizontal
-         false); // mosaic?
-}
-
 SpriteController::SpriteController() {
   this->currentIdMainScreen = 0;
   this->currentIdSubScreen = 0;
@@ -239,4 +178,65 @@ bool SpriteController::validatePaletteNumber(int paletteNumber) {
 
 bool SpriteController::validatePriority(int priority) {
   return (priority >= 0 && priority <= 3);
+}
+
+SpriteController::Sprite::Sprite(OamState *screenOam, SpriteSize spriteSize,
+                                 int id, int x, int y, int priority) {
+  this->screenOam = screenOam;
+  this->spriteSize = spriteSize;
+  this->id = id;
+  this->spriteGfxPointer = oamAllocateGfx(this->screenOam, this->spriteSize,
+                                          SpriteColorFormat_16Color);
+  this->x = x;
+  this->y = y;
+  this->priority = priority;
+  this->paletteNumber = paletteNumber;
+  this->updateData();
+}
+
+void SpriteController::Sprite::setX(int x) {
+  this->x = x;
+  this->updateData();
+}
+
+void SpriteController::Sprite::setY(int y) {
+  this->y = y;
+  this->updateData();
+}
+
+void SpriteController::Sprite::setPriority(int priority) {
+  this->priority = priority;
+  this->updateData();
+}
+
+void SpriteController::Sprite::setPaletteNumber(int paletteNumber) {
+  this->paletteNumber = paletteNumber;
+  this->updateData();
+}
+
+void SpriteController::Sprite::setTiles(const unsigned int tiles[],
+                                        unsigned int tilesLen) {
+  dmaCopy(tiles, this->spriteGfxPointer, tilesLen);
+  this->updateData();
+}
+
+void SpriteController::Sprite::updateData() {
+  oamSet(this->screenOam,
+         this->id,                  // Sprite id
+         this->x,                   // X position
+         this->y,                   // Y position
+         this->priority,            // Priority (lower is better priority)
+         this->paletteNumber,       // Which palette to use
+         this->spriteSize,          // Sprite size can be 8x8; 16x16; 32x32;
+                                    // 16x8 etc;
+         SpriteColorFormat_16Color, // Colour format can be
+                                    // SpriteColorFormat_16Color;
+                                    // SpriteColorFormat_256Color;
+         this->spriteGfxPointer,
+         0,      // affine index (if < 0 or > 31 the sprite will be unrotated)
+         false,  // double sprite size if affine index > 0
+         false,  // hidden
+         false,  // flip vertical
+         false,  // flip horizontal
+         false); // mosaic?
 }
