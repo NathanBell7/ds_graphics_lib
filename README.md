@@ -25,7 +25,7 @@ You can also just use this project and modify it as you wish as a baseline, as i
 ### Create an image
 
 - Use GIMP to create an image that you want to display to the screen (you can use others but I used GIMP so it will be easiest to follow that way).
-- The image size must be a multiple of 8x8 pixels, so it could be 16x16 or 32x32 up to 64x64.
+- The image size must be a multiple of 8x8 pixels, so it could be 16x16 or 32x32 up to 64x64. All Sizes below
 - The image must be in indexed mode (click image on the toolbar, then mode, then indexed) with the maximum number of colours set to 16 (as this is the maximum number of colours allowed per sprite with this library).
 - A helpful tool in gimp is the colourmap, you can click the little arrow at the top right and add the colourmap panel to show all the colours you have used.
 - The first colour in the colourmap will be recognised as an "invisible colour" and will not be rendered by the DS.
@@ -34,6 +34,21 @@ You can also just use this project and modify it as you wish as a baseline, as i
 - In that file, write `-gB4`, then on a new line write `-gt`.
 - In your code, at the top of the file you will be using the image in, type `#include "your_image_name.h"`
 - Your image is ready to be used in you application :)
+
+All supported image sizes:
+
+- 8x8
+- 16x16
+- 32x32
+- 64x64
+- 16x8
+- 32x8
+- 32x16
+- 64x32
+- 8x16
+- 8x32
+- 16x32
+- 32x64
 
 ## General use of the library
 

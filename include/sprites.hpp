@@ -43,7 +43,7 @@ public:
    *
    *  - spriteSize - The size that the sprite's image will be. In the format
    *                 SpriteSize_<X>x<Y> where the X and Y must be minimum of 8
-   *                 and max of 64.
+   *                 and max of 64. All supported sizes in README.md
    *
    *  - x - The x position where the sprite will be displayed(0-255, but can go
    *        outside those values to be offscreen).
