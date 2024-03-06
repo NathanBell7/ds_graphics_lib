@@ -67,7 +67,8 @@ int main() {
       spriteY += 5;
       spriteController->setSpriteY(spriteId, isMainScreen, spriteY);
     }
-
+    // This should always be at the end of your "game loop"/while loop, so you
+    // update your sprites every frame
     spriteController->updateDisplays(true, true);
   }
 
