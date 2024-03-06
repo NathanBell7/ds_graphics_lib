@@ -52,16 +52,6 @@ int SpriteController::createNewSprite(bool isMainScreen, SpriteSize spriteSize,
   }
 }
 
-void SpriteController::updateDisplays(bool isMainScreen, bool subScreen) {
-  swiWaitForVBlank();
-  if (isMainScreen == true) {
-    oamUpdate(&oamMain);
-  }
-  if (subScreen == true) {
-    oamUpdate(&oamSub);
-  }
-}
-
 int SpriteController::addPalette(int paletteNumber, bool isMainScreen,
                                  const unsigned short palette[],
                                  unsigned short paletteLen) {
@@ -145,6 +135,16 @@ int SpriteController::setSpriteTiles(int spriteId, bool isMainScreen,
     spritesSub[spriteId]->setTiles(tiles, tilesLen);
   }
   return 1;
+}
+
+void SpriteController::updateDisplays(bool isMainScreen, bool subScreen) {
+  swiWaitForVBlank();
+  if (isMainScreen == true) {
+    oamUpdate(&oamMain);
+  }
+  if (subScreen == true) {
+    oamUpdate(&oamSub);
+  }
 }
 
 bool SpriteController::validateSpriteId(int spriteId, bool isMainScreen) {
