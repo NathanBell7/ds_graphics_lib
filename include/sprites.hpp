@@ -33,7 +33,8 @@ public:
   /* Description:
    *
    *  Creates a new sprite object that will be displayed to the screen. There
-   *  can be a maximum of 128 sprites per screen.
+   *  can be a maximum of 128 sprites per screen. Can also be used to
+   *  "re-initialize" a display and delete all currently existing sprites.
    *
    * Parameters:
    *
