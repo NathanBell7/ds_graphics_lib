@@ -9,94 +9,6 @@ const int MAX_PALETTES_PER_SCREEN = 16;
 // TODO: Write up method explanations
 class SpriteController {
 
-private:
-
-  class Sprite {
-
-  private:
-    OamState *screenOam;
-    SpriteSize spriteSize;
-    int id;
-    u16 *spriteGfxPointer;
-    int x;
-    int y;
-    int priority;
-    int paletteNumber;
-
-    void updateData() {
-      oamSet(this->screenOam,
-             this->id,                  // Sprite id
-             this->x,                   // X position
-             this->y,                   // Y position
-             this->priority,            // Priority (lower is better priority)
-             this->paletteNumber,       // Which palette to use
-             this->spriteSize,          // Sprite size can be 8x8; 16x16; 32x32;
-                                        // 16x8 etc;
-             SpriteColorFormat_16Color, // Colour format can be
-                                        // SpriteColorFormat_16Color;
-                                        // SpriteColorFormat_256Color;
-             this->spriteGfxPointer,
-             0, // affine index (if < 0 or > 31 the sprite will be unrotated)
-             false,  // double sprite size if affine index > 0
-             false,  // hidden
-             false,  // flip vertical
-             false,  // flip horizontal
-             false); // mosaic?
-    }
-
-  public:
-    Sprite(OamState *screenOam, SpriteSize spriteSize, int id, int x, int y,
-           int priority) {
-      this->screenOam = screenOam;
-      this->spriteSize = spriteSize;
-      this->id = id;
-      this->spriteGfxPointer = oamAllocateGfx(this->screenOam, this->spriteSize,
-                                              SpriteColorFormat_16Color);
-      this->x = x;
-      this->y = y;
-      this->priority = priority;
-      this->paletteNumber = paletteNumber;
-      this->updateData();
-    }
-
-    void setX(int x) {
-      this->x = x;
-      this->updateData();
-    }
-
-    void setY(int y) {
-      this->y = y;
-      this->updateData();
-    }
-
-    void setPriority(int priority) {
-      this->priority = priority;
-      this->updateData();
-    }
-
-    void setPaletteNumber(int paletteNumber) {
-      this->paletteNumber = paletteNumber;
-      this->updateData();
-    }
-
-    void setTiles(const unsigned int tiles[], unsigned int tilesLen) {
-      dmaCopy(tiles, this->spriteGfxPointer, tilesLen);
-      this->updateData();
-    }
-  };
-
-  int currentIdMainScreen;
-  int currentIdSubScreen;
-  Sprite *spritesMain[MAX_SPRITES_PER_SCREEN];
-  Sprite *spritesSub[MAX_SPRITES_PER_SCREEN];
-  bool initialisedPalettesMain[MAX_PALETTES_PER_SCREEN];
-  bool initialisedPalettesSub[MAX_PALETTES_PER_SCREEN];
-
-  bool validateSpriteId(int spriteId, bool mainScreen);
-  bool validateSpritePaletteNumber(int paletteNumber, bool mainScreen);
-  bool validatePaletteNumber(int paletteNumber);
-  bool validatePriority(int priority);
-
 public:
   SpriteController();
 
@@ -139,6 +51,48 @@ public:
 
   int setSpriteTiles(int spriteId, bool isMainScreen,
                      const unsigned int tiles[], unsigned int tilesLen);
+
+private:
+  class Sprite {
+
+  public:
+    Sprite(OamState *screenOam, SpriteSize spriteSize, int id, int x, int y,
+           int priority);
+
+    void setX(int x);
+
+    void setY(int y);
+
+    void setPriority(int priority);
+
+    void setPaletteNumber(int paletteNumber);
+
+    void setTiles(const unsigned int tiles[], unsigned int tilesLen);
+
+  private:
+    OamState *screenOam;
+    SpriteSize spriteSize;
+    int id;
+    u16 *spriteGfxPointer;
+    int x;
+    int y;
+    int priority;
+    int paletteNumber;
+
+    void updateData();
+  };
+
+  int currentIdMainScreen;
+  int currentIdSubScreen;
+  Sprite *spritesMain[MAX_SPRITES_PER_SCREEN];
+  Sprite *spritesSub[MAX_SPRITES_PER_SCREEN];
+  bool initialisedPalettesMain[MAX_PALETTES_PER_SCREEN];
+  bool initialisedPalettesSub[MAX_PALETTES_PER_SCREEN];
+
+  bool validateSpriteId(int spriteId, bool mainScreen);
+  bool validateSpritePaletteNumber(int paletteNumber, bool mainScreen);
+  bool validatePaletteNumber(int paletteNumber);
+  bool validatePriority(int priority);
 };
 
 #endif
