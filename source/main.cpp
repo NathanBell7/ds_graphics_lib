@@ -2,6 +2,7 @@
 #include <nds.h>
 #include <stdio.h>
 
+// The name of the image you created.
 #include "blue_head_down.h"
 
 int main() {
@@ -20,7 +21,7 @@ int main() {
   // display any sprites)
   spriteController->initializeDisplays(true, false);
 
-  // set values so not using magic numbers
+  // Set values so not using magic numbers
   int spriteX = 50;
   int spriteY = 50;
   int priority = 0;
