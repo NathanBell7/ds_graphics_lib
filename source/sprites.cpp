@@ -1,6 +1,5 @@
 #include "sprites.hpp"
 #include <nds.h>
-#include <stdio.h>
 
 SpriteController::SpriteController() {
   this->currentIdMainScreen = 0;
